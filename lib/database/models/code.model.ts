@@ -1,4 +1,4 @@
-import { Document, Schema, model, models } from "mongoose";
+import { model,models,Schema } from "mongoose";
 
 // Define the interface for the code analysis document
 export interface ICodeAnalysis extends Document {
