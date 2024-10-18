@@ -47,7 +47,6 @@ const toBase64 = (str: string) =>
 export const filePlaceholder = `data:application/octet-stream;base64,${toBase64(
   shimmer(1000, 1000)
 )}`;
-// ==== End
 
 // FORM URL QUERY (for managing file queries)
 export type FormUrlQueryParams = {
@@ -68,7 +67,7 @@ export const formUrlQuery = ({
   })}`;
 };
 
-// REMOVE KEYS FROM QUERY (uses RemoveUrlQueryParams type)
+// REMOVE KEYS FROM QUERY
 export type RemoveUrlQueryParams = {
   searchParams: URLSearchParams;
   keysToRemove: string[];
@@ -131,12 +130,12 @@ export const download = (url: string, filename: string) => {
 };
 
 // DEEP MERGE OBJECTS
-export const deepMergeObjects = <T>(obj1: T, obj2: T): T => {
+export const deepMergeObjects = <T extends Record<string, unknown>>(obj1: T, obj2: T): T => {
   if (obj2 === null || obj2 === undefined) {
     return obj1;
   }
 
-  let output = { ...obj2 } as T;
+  const output = { ...obj2 } as T;
 
   for (const key in obj1) {
     if (Object.prototype.hasOwnProperty.call(obj1, key))  {
@@ -146,7 +145,7 @@ export const deepMergeObjects = <T>(obj1: T, obj2: T): T => {
         obj2[key] &&
         typeof obj2[key] === "object"
       ) {
-        output[key] = deepMergeObjects(obj1[key], obj2[key]);
+        output[key] = deepMergeObjects(obj1[key] as Record<string, unknown>, obj2[key] as Record<string, unknown>) as T[Extract<keyof T, string>];
       } else {
         output[key] = obj1[key];
       }
